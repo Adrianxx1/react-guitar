@@ -1,19 +1,19 @@
-export default function Guitar(){
+export default function Guitar({ guitar, agregarCarrito }){
     return (
         <div className="col-md-6 col-lg-4 my-4 row align-items-center">
-                <div className="col-4">
-                    <img className="img-fluid" src="/img/guitarra_01.jpg" alt="imagen guitarra">
-                    </img>
-                </div>
-                <div className="col-8">
-                    <h3 className="text-black fs-4 fw-bold text-uppercase">Lukather</h3>
-                    <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Sit quae labore odit magnam in autem nesciunt, amet deserunt</p>
-                    <p className="fw-black text-primary fs-3">$299</p>
-                    <button 
-                        type="button"
-                        className="btn btn-dark w-100 "
-                    >Agregar al Carrito</button>
-                </div>
-            </div>
+        <div className="col-4">
+            <img className="img-fluid" src={'/img/' + guitar.imagen + '.jpg'} alt={'imagen ' + guitar.nombre}/>
+        </div>
+        <div className="col-8">
+            <h3 className="text-black fs-4 fw-bold text-uppercase">{guitar.nombre}</h3>
+            <p>{ guitar.descripcion}</p>
+            <p className="fw-black text-primary fs-3">${ guitar.precio}</p>
+            <button
+                type="button"
+                onClick={() => agregarCarrito(guitar)}
+                className="btn btn-dark w-100 "
+            >Agregar al Carrito</button>
+        </div>
+    </div>
     )
-} 
+}

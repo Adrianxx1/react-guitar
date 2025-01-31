@@ -18,7 +18,7 @@ export const db = [
         nombre: 'Borland',
         imagen: 'guitarra_03',
         descripcion: 'Morbi ornare augue nisl, vel elementum dui mollis vel. Curabitur non ex id eros fermentum hendrerit.',
-        precio: 329,  
+        precio: 329,
     },
     {
         id: 4,

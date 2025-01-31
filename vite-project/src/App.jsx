@@ -1,31 +1,84 @@
-import { useState } from "react"
-import Footer from "./components/Footer"
-import Guitar from "./components/Guitar"
-import Header from "./components/Header"
+import Guitar from "./components/Guitar";
+import Footer from "./components/Footer";
+import Header from "./components/Header";
 import { db } from "./data/guitarras"
+import { useEffect, useState } from "react";
 
-export default function(){
+export default function App(){
 
-  const [guitars] =useState(db)
+      const [guitars] = useState(db)
+      const [carrito, setCarrito] = useState(cargaStorage())
 
-  return (
-    <>
-    
-    <Header></Header>
-    
-       <main classNameName="container-xl mt-5">
-        <h2 className="text-center">Nuestra Colección</h2>
+      useEffect(guardaStorage, [carrito])
 
-        <div className="row mt-5">
-            {
-                guitars.map(g => (
-                  <Guitar key={g.id} guitar={gitar}/>
-                ))
-            }
-        </div>
-    </main>
-    <Footer></Footer>
-    </>
-    
-  )
+      function cargaStorage(){
+        const storageData = localStorage.getItem('carrito')
+        return storageData ? JSON.parse(storageData): []
+      }
+
+      function guardaStorage(){
+        localStorage.setItem('carrito', JSON.stringify(carrito))
+      }
+
+      function agregarCarrito(guitar){
+        const carritoNuevo = [...carrito]
+        const idExiste = carritoNuevo.findIndex(g => g.id === guitar.id)
+        if(idExiste === -1){
+          carritoNuevo.push({...guitar, cantidad: 1})
+        } else {
+            carritoNuevo[idExiste].cantidad++
+        }
+        setCarrito(carritoNuevo)
+
+      }
+      function quitaUno(id) {
+        setCarrito(prevCarrito => {
+            return prevCarrito.map(g => 
+                g.id === id 
+                    ? { ...g, cantidad: g.cantidad - 1 } 
+                    : g
+            ).filter(g => g.cantidad > 0); // Elimina el producto si su cantidad llega a 0
+        });
+    }
+
+      function quitaGuitarra(id){
+        setCarrito(carrito.filter(g => g.id !== id))
+      }
+
+      function vaciarCarrito(id){
+        setCarrito([])
+      }
+
+    return(
+        <>
+          <Header
+              carrito={carrito}
+              guitar={guitars[3]}
+              agregarCarrito={agregarCarrito}
+              quitaUno={quitaUno}
+              quitaGuitarra={quitaGuitarra}
+              vaciarCarrito={vaciarCarrito}
+
+            />
+            <main className="container-xl mt-5">
+            <h2 className="text-center">Nuestra Colección</h2>
+
+            <div className="row mt-5">
+                  {
+                    guitars.map(g => (
+                      <Guitar 
+                      key={g.id} 
+                      agregarCarrito={agregarCarrito}
+                      quitaUno={quitaUno}
+                      quitaGuitarra={quitaGuitarra}
+                      vaciarCarrito={vaciarCarrito}
+                      guitar={g} 
+                      />
+                    ))
+                  }
+            </div>
+            </main>
+            <Footer />
+        </>
+    )
 }
